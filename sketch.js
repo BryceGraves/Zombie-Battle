@@ -3,7 +3,7 @@
 
 var backgroundColor;
 
-const MIN_SIZE = 5;
+const MIN_SIZE = 10;
 const MAX_SIZE = 50;
 const POPULATION_SIZE = 500;
 
@@ -84,7 +84,7 @@ function initializeZombie() {
     y: random(0, 200),
     speed: random(0.25, 3),
     size: random(MIN_SIZE, MAX_SIZE),
-    color: color(random(100, 255), random(50, 150), random(50, 150), 150),
+    color: color(random(190, 255), random(50, 150), random(50, 150)),
     move: function() {
       var direction = random(0, 100);
       if (direction < 20) {
@@ -96,12 +96,24 @@ function initializeZombie() {
       } else {
         this.y += this.speed;
       }
+
+      if (this.x >= windowWidth) {
+        this.x -= this.speed;
+      } else if (this.x <= 0) {
+        this.x += this.speed;
+      }
+
+      if (this.y >= windowHeight) {
+        this.y -= this.speed;
+      } else if (this.y <= 0) {
+        this.y += this.speed;
+      }
     },
     draw: function() {
       fill(this.color);
       ellipse(this.x, this.y, this.size, this.size);
     },
-    isTouching: function(target){
+    isTouching: function(target) {
       if (this.humanoidType == target.humanoidType) return false;
       var distance = dist(this.x, this.y, target.x, target.y);
       return distance <= (this.size/2 + target.size/2);
@@ -116,7 +128,7 @@ function initializeHuman() {
     y: random(windowHeight - 200, windowHeight),
     speed: random(0.25, 3),
     size: random(MIN_SIZE, MAX_SIZE),
-    color: color(random(50, 150), random(50, 150), random(150, 255), 150),
+    color: color(random(50, 150), random(50, 150), random(190, 255)),
     move: function() {
         var direction = random(0, 100);
         if (direction < 20) {
@@ -128,12 +140,24 @@ function initializeHuman() {
         } else {
           this.y -= this.speed;
         }
+
+        if (this.x >= windowWidth) {
+          this.x -= this.speed;
+        } else if (this.x <= 0) {
+          this.x += this.speed;
+        }
+
+        if (this.y >= windowHeight) {
+          this.y -= this.speed;
+        } else if (this.y <= 0) {
+          this.y += this.speed;
+        }
       },
     draw: function() {
         fill(this.color);
         ellipse(this.x, this.y, this.size, this.size);
     },
-    isTouching: function(target){
+    isTouching: function(target) {
       if (this.humanoidType == target.humanoidType) return false;
       var distance = dist(this.x, this.y, target.x, target.y);
       return distance <= (this.size/2 + target.size/2);
@@ -145,18 +169,24 @@ function initializeHuman() {
 function fight(attacker, target) {
   //Second if statement to see who lost, the loser has it's size set to 0 and is now ignored. Thee correct pop is reduced by 1.
   if (target.size < attacker.size) {
-    target.size = 0;
     if (target.humanoidType == "zombie") {
+      target.size = 0;
       zombieCount--;
     } else {
+      target.humanoidType = "zombie";
+      target.color = color(random(190, 255), random(50, 150), random(50, 150));
       humanCount--;
+      zombieCount++;
     }
   } else if (target.size > attacker.size) {
-    attacker.size = 0;
     if (attacker.humanoidType == "zombie") {
+      attacker.size = 0;
       zombieCount--;
     } else {
+      attacker.humanoidType = "zombie";
+      attacker.color = color(random(190, 255), random(50, 150), random(50, 150));
       humanCount--;
+      zombieCount++;
     }
   } else if (target.size == attacker.size) {
     target.size = 0;
