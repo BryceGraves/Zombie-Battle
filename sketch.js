@@ -1,5 +1,10 @@
-//Zombulator by Elsie Charles
-//CS160
+//Zombulator homework help/experiementing
+//Zombulator boiler plate code provided by Elsie Charles of the class CS160 in fall 2017
+
+//--TODO--
+//Path humans away from Zombies
+//Path humans together
+//Path zombies towards humans
 
 var backgroundColor;
 
