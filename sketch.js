@@ -26,8 +26,7 @@ function setup() {
 function draw() {
   background(backgroundColor);
   noStroke();
-  drawPopulation();
-  movePopulation();
+  handlePopulation();
   drawPopulationCounts();
   handleCollisions();
 }
@@ -39,7 +38,6 @@ function handleCollisions() {
       var target = population[j];
 
       if (attacker.isTouching(target)) {
-        //If statement that checks to see if zombie/human is "dead"
         if (attacker.size != 0 && target.size != 0) {
           print ("Fight");
           fight(attacker, target);
@@ -70,14 +68,9 @@ function drawPopulationCounts() {
   text("Humans: " + humanCount, width / 2, height - 100);
 }
 
-function drawPopulation() {
+function handlePopulation() {
   for (var i = 0; i < POPULATION_SIZE; ++i) {
     population[i].draw();
-  }
-}
-
-function movePopulation() {
-  for (var i = 0; i < POPULATION_SIZE; ++i) {
     population[i].move();
   }
 }
