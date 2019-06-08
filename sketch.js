@@ -6,16 +6,16 @@
 //Path humans together
 //Path zombies towards humans
 
-var backgroundColor;
-
 const MIN_SIZE = 10;
 const MAX_SIZE = 50;
 const POPULATION_SIZE = 500;
 
+var backgroundColor;
 var population = [];
-
 var zombieCount = 0;
 var humanCount = 0;
+
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -29,7 +29,7 @@ function draw() {
   drawPopulation();
   movePopulation();
   drawPopulationCounts();
-  handleCollisions ();
+  handleCollisions();
 }
 
 function handleCollisions() {
