@@ -31,22 +31,6 @@ function draw() {
   handleCollisions();
 }
 
-function handleCollisions() {
-  for(var i = 0; i < POPULATION_SIZE; ++i) {
-    var attacker = population[i];
-    for (var j = i + 1; j < POPULATION_SIZE; ++j) {
-      var target = population[j];
-
-      if (attacker.isTouching(target)) {
-        if (attacker.size != 0 && target.size != 0) {
-          print ("Fight");
-          fight(attacker, target);
-        }
-      }
-    }
-  }
-}
-
 function initializePopulation() {
   for (var i = 0; i < POPULATION_SIZE; ++i) {
     var humanoid_type = random(0, 100);
@@ -56,6 +40,22 @@ function initializePopulation() {
     } else {
       population[i] = initializeHuman();
       ++humanCount;
+    }
+  }
+}
+
+function handleCollisions() {
+  for(var i = 0; i < POPULATION_SIZE; ++i) {
+    var attacker = population[i];
+    for (var j = i + 1; j < POPULATION_SIZE; ++j) {
+      var target = population[j];
+
+      if (isTouching(attacker, target)) {
+        if (attacker.size != 0 && target.size != 0) {
+          print ("Fight");
+          fight(attacker, target);
+        }
+      }
     }
   }
 }
@@ -70,8 +70,30 @@ function drawPopulationCounts() {
 
 function handlePopulation() {
   for (var i = 0; i < POPULATION_SIZE; ++i) {
-    population[i].draw();
-    population[i].move();
+    var direction = random(0, 100);
+    fill(population[i].color);
+    ellipse(population[i].x, population[i].y, population[i].size, population[i].size);
+    if (direction < 20) {
+      population[i].x += population[i].speed;
+    } else if (direction < 40) {
+      population[i].x -= population[i].speed;
+    } else if (direction < 60) {
+      population[i].y += population[i].speed;
+    } else {
+      population[i].y -= population[i].speed;
+    }
+  
+    if (population[i].x >= windowWidth) {
+      population[i].x -= population[i].speed;
+    } else if (population[i].x <= 0) {
+      population[i].x += population[i].speed;
+    }
+  
+    if (population[i].y >= windowHeight) {
+      population[i].y -= population[i].speed;
+    } else if (population[i].y <= 0) {
+      population[i].y += population[i].speed;
+    }
   }
 }
 
@@ -83,39 +105,6 @@ function initializeZombie() {
     speed: random(0.25, 3),
     size: random(MIN_SIZE, MAX_SIZE),
     color: color(random(190, 255), random(50, 150), random(50, 150)),
-    move: function() {
-      var direction = random(0, 100);
-      if (direction < 20) {
-        this.x += this.speed;
-      } else if (direction < 40) {
-        this.x -= this.speed;
-      } else if (direction < 60) {
-        this.y -= this.speed;
-      } else {
-        this.y += this.speed;
-      }
-
-      if (this.x >= windowWidth) {
-        this.x -= this.speed;
-      } else if (this.x <= 0) {
-        this.x += this.speed;
-      }
-
-      if (this.y >= windowHeight) {
-        this.y -= this.speed;
-      } else if (this.y <= 0) {
-        this.y += this.speed;
-      }
-    },
-    draw: function() {
-      fill(this.color);
-      ellipse(this.x, this.y, this.size, this.size);
-    },
-    isTouching: function(target) {
-      if (this.humanoidType == target.humanoidType) return false;
-      var distance = dist(this.x, this.y, target.x, target.y);
-      return distance <= (this.size/2 + target.size/2);
-    }
   };
 }
 
@@ -127,40 +116,13 @@ function initializeHuman() {
     speed: random(0.25, 3),
     size: random(MIN_SIZE, MAX_SIZE),
     color: color(random(50, 150), random(50, 150), random(190, 255)),
-    move: function() {
-        var direction = random(0, 100);
-        if (direction < 20) {
-          this.x += this.speed;
-        } else if (direction < 40) {
-          this.x -= this.speed;
-        } else if (direction < 60) {
-          this.y += this.speed;
-        } else {
-          this.y -= this.speed;
-        }
-
-        if (this.x >= windowWidth) {
-          this.x -= this.speed;
-        } else if (this.x <= 0) {
-          this.x += this.speed;
-        }
-
-        if (this.y >= windowHeight) {
-          this.y -= this.speed;
-        } else if (this.y <= 0) {
-          this.y += this.speed;
-        }
-      },
-    draw: function() {
-        fill(this.color);
-        ellipse(this.x, this.y, this.size, this.size);
-    },
-    isTouching: function(target) {
-      if (this.humanoidType == target.humanoidType) return false;
-      var distance = dist(this.x, this.y, target.x, target.y);
-      return distance <= (this.size/2 + target.size/2);
-    }
   };
+}
+
+function isTouching(self, target) {
+  if (self.humanoidType == target.humanoidType) return false;
+  var distance = dist(self.x, self.y, target.x, target.y);
+  return distance <= (self.size/2 + target.size/2);
 }
 
 //New fight function that is passed the attacker and target
