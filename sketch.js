@@ -44,9 +44,9 @@ const drawPopulationCounts = () => {
 
 const initializePopulation = () => {
   for (let i = 0; i < POPULATION_SIZE; ++i) {
-    // const current = random(0, 100) < 50 ? initializeHuman() : initializeZombie();
+    const current = random(0, 100) < 50 ? initializeHuman() : initializeZombie();
 
-    population['human'].push(initializeHuman());
+    population[current.humanoidType].push(current);
   }
 };
 
@@ -60,20 +60,20 @@ const handleCollisions = () => {
   });
 };
 
-const handleHumanMovement = (human) => {
-  if (human.x !== population.human[0].x) {
-    if (Math.abs(human.x - population.human[0].x) < human.speed) {
-      human.x = population.human[0].x;
+const handleMovement = (current) => {
+  if (current.x !== population.human[0].x) {
+    if (Math.abs(current.x - population.human[0].x) < current.speed) {
+      current.x = population.human[0].x;
     } else {
-      human.x += human.x < population.human[0].x ? human.speed : -human.speed;
+      current.x += current.x < population.human[0].x ? current.speed : -current.speed;
     }
   }
 
-  if (human.y !== population.human[0].y) {
-    if (Math.abs(human.y - population.human[0].y) < human.speed) {
-      human.y = population.human[0].y;
+  if (current.y !== population.human[0].y) {
+    if (Math.abs(current.y - population.human[0].y) < current.speed) {
+      current.y = population.human[0].y;
     } else {
-      human.y += human.y < population.human[0].y ? human.speed : -human.speed;
+      current.y += current.y < population.human[0].y ? current.speed : -current.speed;
     }
   }
 };
@@ -83,11 +83,18 @@ const handlePopulation = () => {
     fill(h.color);
     ellipse(h.x, h.y, h.size, h.size);
 
-    if (i === 0) {
-      return;
+    if (i !== 0) {
+      handleMovement(h);
     }
+  });
 
-    handleHumanMovement(h);
+  population.zombie.forEach((z, i) => {
+    fill(z.color);
+    ellipse(z.x, z.y, z.size, z.size);
+
+    if (i !== 0) {
+      handleMovement(z);
+    }
   });
 };
 
