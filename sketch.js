@@ -61,29 +61,16 @@ const drawPopulationCounts = () => {
 };
 
 const handlePopulation = () => {
-  population.human.forEach((i) => {
-    fill(i.color);
-    ellipse(i.x, i.y, i.size, i.size);
+  population.human.forEach((h, i) => {
+    fill(h.color);
+    ellipse(h.x, h.y, h.size, h.size);
 
-    let currentShortestDistance = Number.MAX_SAFE_INTEGER;
-    let xIncrease = 0;
-    let yIncrease = 0;
+    if (i === 0) {
+      return;
+    }
 
-    population.human.forEach((j) => {
-      if (i.id === j.id) {
-        return;
-      }
-
-      const distance = dist(i.x, i.y, j.x, j.y);
-
-      if (distance < currentShortestDistance) {
-        xIncrease = i.x < j.x ? i.speed : -i.speed;
-        yIncrease = i.y < j.y ? i.speed : -i.speed;
-      }
-    });
-
-    i.x += xIncrease;
-    i.y += yIncrease;
+    h.x += h.x < population.human[0].x ? h.speed : -h.speed;
+    h.y += h.y < population.human[0].y ? h.speed : -h.speed;
   });
 };
 
