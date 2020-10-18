@@ -69,8 +69,21 @@ const handlePopulation = () => {
       return;
     }
 
-    h.x += h.x < population.human[0].x ? h.speed : -h.speed;
-    h.y += h.y < population.human[0].y ? h.speed : -h.speed;
+    if (h.x !== population.human[0].x) {
+      if (Math.abs(h.x - population.human[0].x) < h.speed) {
+        h.x = population.human[0].x;
+      } else {
+        h.x += h.x < population.human[0].x ? h.speed : -h.speed;
+      }
+    }
+
+    if (h.y !== population.human[0].y) {
+      if (Math.abs(h.y - population.human[0].y) < h.speed) {
+        h.y = population.human[0].y;
+      } else {
+        h.y += h.y < population.human[0].y ? h.speed : -h.speed;
+      }
+    }
   });
 };
 
