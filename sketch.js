@@ -30,19 +30,41 @@ function draw() {
   background(backgroundColor);
   noStroke();
 
-  if (!populationEmpty()) {
+  if (populationEmpty()) {
+    drawEndingScreen();
+  } else {
     handlePopulation();
     drawPopulationCounts();
     handleCollisions();
   }
 }
 
+const drawEndingScreen = () => {
+  stroke(0);
+  textSize(72);
+  textAlign(CENTER);
+
+  if (!population.human.length && !population.zombie.length) {
+    text(
+      'Humans and zombies have defeated each other... nothing left here but nature',
+      width / 2,
+      height / 2
+    );
+  } else if (!population.zombie.length) {
+    text('Humans eradicated the zombie threat!', width / 2, height / 2);
+  } else if (!population.human.length) {
+    text('Zombies have taken over the world :(', width / 2, height / 2);
+  } else {
+    text("YOU SHOULDN'T BE SEEING THIS", width / 2, height / 2);
+  }
+};
+
 const drawPopulationCounts = () => {
   stroke(0);
   textSize(72);
   textAlign(CENTER);
-  text('Zombies: ' + population.zombie.length, width / 2, 100);
   text('Humans: ' + population.human.length, width / 2, height - 100);
+  text('Zombies: ' + population.zombie.length, width / 2, 100);
 };
 
 const initializePopulation = () => {
@@ -96,18 +118,6 @@ const handlePopulation = () => {
   });
 };
 
-const initializeZombie = () => {
-  return {
-    id: uuid(),
-    humanoidType: 'zombie',
-    x: random(0, windowWidth),
-    y: random(0, 200),
-    speed: random(2, 3),
-    size: random(MIN_SIZE, MAX_SIZE),
-    color: color(random(150, 250), random(50, 150), random(50, 150)),
-  };
-};
-
 const initializeHuman = () => {
   return {
     id: uuid(),
@@ -117,6 +127,18 @@ const initializeHuman = () => {
     speed: random(1, 2),
     size: random(MIN_SIZE, MAX_SIZE),
     color: color(random(50, 150), random(50, 150), random(150, 250)),
+  };
+};
+
+const initializeZombie = () => {
+  return {
+    id: uuid(),
+    humanoidType: 'zombie',
+    x: random(0, windowWidth),
+    y: random(0, 200),
+    speed: random(2, 3),
+    size: random(MIN_SIZE, MAX_SIZE),
+    color: color(random(150, 250), random(50, 150), random(50, 150)),
   };
 };
 
