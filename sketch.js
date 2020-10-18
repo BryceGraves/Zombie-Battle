@@ -3,12 +3,6 @@
   Zombulator boiler plate code provided by Elsie Charles of the class CS160 in fall 2017
 */
 
-/*
-  TODO: Path humans away from Zombies
-  TODO: Path humans together
-  TODO: Path zombies towards humans
-*/
-
 const MIN_SIZE = 10;
 const MAX_SIZE = 50;
 const POPULATION_SIZE = 500;
@@ -69,7 +63,7 @@ const drawPopulationCounts = () => {
 
 const initializePopulation = () => {
   for (let i = 0; i < POPULATION_SIZE; ++i) {
-    const current = random(0, 100) < 50 ? initializeHuman() : initializeZombie();
+    const current = initializeHumanoid(random(0, 100) < 50 ? 'human' : 'zombie');
 
     population[current.humanoidType].push(current);
   }
@@ -118,28 +112,28 @@ const handlePopulation = () => {
   });
 };
 
-const initializeHuman = () => {
-  return {
+const initializeHumanoid = (type) => {
+  const humanoid = {
     id: uuid(),
-    humanoidType: 'human',
+    humanoidType: type,
     x: random(0, windowWidth),
-    y: random(windowHeight - 200, windowHeight),
-    speed: random(1, 2),
     size: random(MIN_SIZE, MAX_SIZE),
-    color: color(random(50, 150), random(50, 150), random(150, 250)),
   };
-};
 
-const initializeZombie = () => {
-  return {
-    id: uuid(),
-    humanoidType: 'zombie',
-    x: random(0, windowWidth),
-    y: random(0, 200),
-    speed: random(2, 3),
-    size: random(MIN_SIZE, MAX_SIZE),
-    color: color(random(150, 250), random(50, 150), random(50, 150)),
-  };
+  switch (type) {
+    case 'human':
+      humanoid.y = random(windowHeight - 200, windowHeight);
+      humanoid.speed = random(1, 2);
+      humanoid.color = color(random(50, 150), random(50, 150), random(150, 250));
+      break;
+    case 'zombie':
+      humanoid.y = random(0, 200);
+      humanoid.speed = random(2, 3);
+      humanoid.color = color(random(150, 250), random(50, 150), random(50, 150));
+      break;
+  }
+
+  return humanoid;
 };
 
 const isTouching = (self, target) =>
