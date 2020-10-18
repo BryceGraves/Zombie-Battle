@@ -34,6 +34,14 @@ function draw() {
   handleCollisions();
 }
 
+const drawPopulationCounts = () => {
+  stroke(0);
+  textSize(72);
+  textAlign(CENTER);
+  text('Zombies: ' + population.zombie.length, width / 2, 100);
+  text('Humans: ' + population.human.length, width / 2, height - 100);
+};
+
 const initializePopulation = () => {
   for (let i = 0; i < POPULATION_SIZE; ++i) {
     // const current = random(0, 100) < 50 ? initializeHuman() : initializeZombie();
@@ -52,12 +60,22 @@ const handleCollisions = () => {
   });
 };
 
-const drawPopulationCounts = () => {
-  stroke(0);
-  textSize(72);
-  textAlign(CENTER);
-  text('Zombies: ' + population.zombie.length, width / 2, 100);
-  text('Humans: ' + population.human.length, width / 2, height - 100);
+const handleHumanMovement = (human) => {
+  if (human.x !== population.human[0].x) {
+    if (Math.abs(human.x - population.human[0].x) < human.speed) {
+      human.x = population.human[0].x;
+    } else {
+      human.x += human.x < population.human[0].x ? human.speed : -human.speed;
+    }
+  }
+
+  if (human.y !== population.human[0].y) {
+    if (Math.abs(human.y - population.human[0].y) < human.speed) {
+      human.y = population.human[0].y;
+    } else {
+      human.y += human.y < population.human[0].y ? human.speed : -human.speed;
+    }
+  }
 };
 
 const handlePopulation = () => {
@@ -69,21 +87,7 @@ const handlePopulation = () => {
       return;
     }
 
-    if (h.x !== population.human[0].x) {
-      if (Math.abs(h.x - population.human[0].x) < h.speed) {
-        h.x = population.human[0].x;
-      } else {
-        h.x += h.x < population.human[0].x ? h.speed : -h.speed;
-      }
-    }
-
-    if (h.y !== population.human[0].y) {
-      if (Math.abs(h.y - population.human[0].y) < h.speed) {
-        h.y = population.human[0].y;
-      } else {
-        h.y += h.y < population.human[0].y ? h.speed : -h.speed;
-      }
-    }
+    handleHumanMovement(h);
   });
 };
 
