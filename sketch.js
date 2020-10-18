@@ -36,9 +36,9 @@ function draw() {
 
 const initializePopulation = () => {
   for (let i = 0; i < POPULATION_SIZE; ++i) {
-    const current = random(0, 100) < 50 ? initializeHuman() : initializeZombie();
+    // const current = random(0, 100) < 50 ? initializeHuman() : initializeZombie();
 
-    population[current.humanoidType].push(current);
+    population['human'].push(initializeHuman());
   }
 };
 
@@ -61,33 +61,29 @@ const drawPopulationCounts = () => {
 };
 
 const handlePopulation = () => {
-  [...population.human, ...population.zombie].forEach((current) => {
-    const direction = random(0, 100);
+  population.human.forEach((i) => {
+    fill(i.color);
+    ellipse(i.x, i.y, i.size, i.size);
 
-    fill(current.color);
-    ellipse(current.x, current.y, current.size, current.size);
+    let currentShortestDistance = Number.MAX_SAFE_INTEGER;
+    let xIncrease = 0;
+    let yIncrease = 0;
 
-    if (direction < 20) {
-      current.x += current.speed;
-    } else if (direction < 40) {
-      current.x -= current.speed;
-    } else if (direction < 60) {
-      current.y += current.speed;
-    } else {
-      current.y -= current.speed;
-    }
+    population.human.forEach((j) => {
+      if (i.id === j.id) {
+        return;
+      }
 
-    if (current.x >= windowWidth) {
-      current.x -= current.speed;
-    } else if (current.x <= 0) {
-      current.x += current.speed;
-    }
+      const distance = dist(i.x, i.y, j.x, j.y);
 
-    if (current.y >= windowHeight) {
-      current.y -= current.speed;
-    } else if (current.y <= 0) {
-      current.y += current.speed;
-    }
+      if (distance < currentShortestDistance) {
+        xIncrease = i.x < j.x ? i.speed : -i.speed;
+        yIncrease = i.y < j.y ? i.speed : -i.speed;
+      }
+    });
+
+    i.x += xIncrease;
+    i.y += yIncrease;
   });
 };
 
