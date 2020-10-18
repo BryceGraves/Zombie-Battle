@@ -61,6 +61,10 @@ const handleCollisions = () => {
 };
 
 const handleMovement = (current) => {
+  if (!current || population.human.length === 0) {
+    return;
+  }
+
   if (current.x !== population.human[0].x) {
     if (Math.abs(current.x - population.human[0].x) < current.speed) {
       current.x = population.human[0].x;
@@ -79,21 +83,12 @@ const handleMovement = (current) => {
 };
 
 const handlePopulation = () => {
-  population.human.forEach((h, i) => {
-    fill(h.color);
-    ellipse(h.x, h.y, h.size, h.size);
+  [...population.human, ...population.zombie].forEach((v, i) => {
+    fill(v.color);
+    ellipse(v.x, v.y, v.size, v.size);
 
     if (i !== 0) {
-      handleMovement(h);
-    }
-  });
-
-  population.zombie.forEach((z, i) => {
-    fill(z.color);
-    ellipse(z.x, z.y, z.size, z.size);
-
-    if (i !== 0) {
-      handleMovement(z);
+      handleMovement(v);
     }
   });
 };
@@ -104,7 +99,7 @@ const initializeZombie = () => {
     humanoidType: 'zombie',
     x: random(0, windowWidth),
     y: random(0, 200),
-    speed: random(0.25, 3),
+    speed: random(2, 3),
     size: random(MIN_SIZE, MAX_SIZE),
     color: color(random(150, 250), random(50, 150), random(50, 150)),
   };
@@ -116,7 +111,7 @@ const initializeHuman = () => {
     humanoidType: 'human',
     x: random(0, windowWidth),
     y: random(windowHeight - 200, windowHeight),
-    speed: random(0.25, 3),
+    speed: random(1, 2),
     size: random(MIN_SIZE, MAX_SIZE),
     color: color(random(50, 150), random(50, 150), random(150, 250)),
   };
